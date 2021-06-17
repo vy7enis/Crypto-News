@@ -58,6 +58,12 @@ def main():
 
     articles = create_article_objects(response)
 
+    n_inserted, n_failed = insert_articles_to_db(articles, n_inserted, n_failed)
+    
+    print("n_inserted: ", n_inserted)
+    print("n_failed: ", n_failed)
+
+def insert_articles_to_db(articles, n_inserted, n_failed):
     print("inserting to DB")
     for article in articles:
         try:
@@ -67,11 +73,8 @@ def main():
         except NotUniqueError as e:
             n_failed +=1
             x=e.args
-    
-    print("complete")
-        
-    print("n_inserted: ", n_inserted)
-    print("n_failed: ", n_failed)
+    print("Insertion")
+    return n_inserted, n_failed
 
 def create_article_objects(response):
     print("creating article objects from response")
