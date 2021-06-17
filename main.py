@@ -54,9 +54,7 @@ def main():
     n_inserted = 0
     n_failed =0
 
-    print("getting data")    
-    response = requests.get(CRYPTOCOMPARE_URL)
-    print("Article number given from API:", len(response.json()['Data']))
+    response = get_news_from_cryptocompare()
 
     print("creating article objects from response")
     articles = []
@@ -79,6 +77,12 @@ def main():
         
     print("n_inserted: ", n_inserted)
     print("n_failed: ", n_failed)
+
+def get_news_from_cryptocompare():
+    print("getting data")    
+    response = requests.get(CRYPTOCOMPARE_URL)
+    print("Article number given from API:", len(response.json()['Data']))
+    return response
 
 def connect_to_mongodb(collection_name):
     connect(collection_name)
