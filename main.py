@@ -44,26 +44,18 @@ def create_article_from_dict(article_dict):
     article = Article(**i)
     return article
 
-#isloginti objectus is crypto compare
 
 def main():
-    connect_to_mongodb(collection_name="spurga")
-
     print("program starts")
-    #intialising stats variables
+    connect_to_mongodb(collection_name="spurga")
+    response = get_news_from_cryptocompare()
+    articles = create_article_objects(response)
+    insert_articles_to_db(articles)
+
+
+def insert_articles_to_db(articles):
     n_inserted = 0
     n_failed =0
-
-    response = get_news_from_cryptocompare()
-
-    articles = create_article_objects(response)
-
-    n_inserted, n_failed = insert_articles_to_db(articles, n_inserted, n_failed)
-    
-    print("n_inserted: ", n_inserted)
-    print("n_failed: ", n_failed)
-
-def insert_articles_to_db(articles, n_inserted, n_failed):
     print("inserting to DB")
     for article in articles:
         try:
@@ -74,7 +66,9 @@ def insert_articles_to_db(articles, n_inserted, n_failed):
             n_failed +=1
             x=e.args
     print("Insertion")
-    return n_inserted, n_failed
+    print("n_inserted: ", n_inserted)
+    print("n_failed: ", n_failed)
+
 
 def create_article_objects(response):
     print("creating article objects from response")
@@ -85,14 +79,17 @@ def create_article_objects(response):
     print(len(articles), "Created")
     return articles
 
+
 def get_news_from_cryptocompare():
     print("getting data")    
     response = requests.get(CRYPTOCOMPARE_URL)
     print("Article number given from API:", len(response.json()['Data']))
     return response
 
+
 def connect_to_mongodb(collection_name):
     connect(collection_name)
+
 
 if __name__ == "__main__":
     main()
