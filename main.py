@@ -56,12 +56,7 @@ def main():
 
     response = get_news_from_cryptocompare()
 
-    print("creating article objects from response")
-    articles = []
-    for i in response.json()['Data']:
-        article = create_article_from_dict(i)
-        articles.append(article)
-    print(len(articles), "Created")
+    articles = create_article_objects(response)
 
     print("inserting to DB")
     for article in articles:
@@ -77,6 +72,15 @@ def main():
         
     print("n_inserted: ", n_inserted)
     print("n_failed: ", n_failed)
+
+def create_article_objects(response):
+    print("creating article objects from response")
+    articles = []
+    for i in response.json()['Data']:
+        article = create_article_from_dict(i)
+        articles.append(article)
+    print(len(articles), "Created")
+    return articles
 
 def get_news_from_cryptocompare():
     print("getting data")    
