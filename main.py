@@ -47,7 +47,8 @@ def create_article_from_dict(article_dict):
 #isloginti objectus is crypto compare
 
 def main():
-    connect('spurga')
+    connect_to_mongodb(collection_name="spurga")
+
     print("program starts")
     #intialising stats variables
     n_inserted = 0
@@ -78,6 +79,9 @@ def main():
         
     print("n_inserted: ", n_inserted)
     print("n_failed: ", n_failed)
+
+def connect_to_mongodb(collection_name):
+    connect(collection_name)
 
 if __name__ == "__main__":
     main()
