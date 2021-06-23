@@ -1,15 +1,24 @@
-
 from datetime import datetime
 import requests
 import time
 import config
 
-from mongoengine import connect, Document, ObjectIdField, IntField, URLField, StringField, ListField, DateTimeField
+from mongoengine import (
+    connect,
+    Document,
+    ObjectIdField,
+    IntField,
+    URLField,
+    StringField,
+    ListField,
+    DateTimeField,
+)
 from mongoengine.errors import BulkWriteError, FieldDoesNotExist, NotUniqueError
 
 
-
-CRYPTOCOMPARE_URL = 'https://min-api.cryptocompare.com/data/v2/news/?lang=EN&api_key=key'
+CRYPTOCOMPARE_URL = (
+    "https://min-api.cryptocompare.com/data/v2/news/?lang=EN&api_key=key"
+)
 
 
 class Article(Document):
@@ -30,14 +39,15 @@ class Article(Document):
 
 
 def create_article_from_dict(article_dict):
-    i = article_dict    
+    i = article_dict
+    # todo rename key id to article id
     i["article_id"] = i.pop("id")
     try:
         del i["downvotes"]
         del i["upvotes"]
     except FieldDoesNotExist:
         pass
-      
+
     i["source"] = i["source_info"]["name"]
     i["published_on"] = datetime.fromtimestamp(i["published_on"])
 
@@ -55,16 +65,16 @@ def main():
 
 def insert_articles_to_db(articles):
     n_inserted = 0
-    n_failed =0
+    n_failed = 0
     print("inserting to DB")
     for article in articles:
         try:
-            x=Article.objects.insert(article)        
-            n_inserted +=1            
-            print('Article objects: ', x.guid)
+            x = Article.objects.insert(article)
+            n_inserted += 1
+            print("Article objects: ", x.guid)
         except NotUniqueError as e:
-            n_failed +=1
-            x=e.args
+            n_failed += 1
+            x = e.args
     print("Insertion")
     print("n_inserted: ", n_inserted)
     print("n_failed: ", n_failed)
@@ -73,7 +83,7 @@ def insert_articles_to_db(articles):
 def create_article_objects(response):
     print("creating article objects from response")
     articles = []
-    for i in response.json()['Data']:
+    for i in response.json()["Data"]:
         article = create_article_from_dict(i)
         articles.append(article)
     print(len(articles), "Created")
@@ -81,9 +91,9 @@ def create_article_objects(response):
 
 
 def get_news_from_cryptocompare():
-    print("getting data")    
+    print("getting data")
     response = requests.get(CRYPTOCOMPARE_URL)
-    print("Article number given from API:", len(response.json()['Data']))
+    print("Article number given from API:", len(response.json()["Data"]))
     return response
 
 
