@@ -1,7 +1,8 @@
 
-# get_data_from_cryptocompare.py
 from datetime import datetime
 import requests
+import time
+import config
 
 from mongoengine import connect, Document, ObjectIdField, IntField, URLField, StringField, ListField, DateTimeField
 from mongoengine.errors import BulkWriteError, FieldDoesNotExist, NotUniqueError
@@ -29,8 +30,7 @@ class Article(Document):
 
 
 def create_article_from_dict(article_dict):
-    i=article_dict
-    #todo rename key id to article id
+    i = article_dict    
     i["article_id"] = i.pop("id")
     try:
         del i["downvotes"]
@@ -47,10 +47,10 @@ def create_article_from_dict(article_dict):
 
 def main():
     print("program starts")
-    connect_to_mongodb(collection_name="spurga")
+    connect_to_mongodb(host=config.SERVER_URL)   
     response = get_news_from_cryptocompare()
     articles = create_article_objects(response)
-    insert_articles_to_db(articles)
+    insert_articles_to_db(articles)      
 
 
 def insert_articles_to_db(articles):
@@ -87,11 +87,9 @@ def get_news_from_cryptocompare():
     return response
 
 
-def connect_to_mongodb(collection_name):
-    connect(collection_name)
+def connect_to_mongodb(host):
+    connect(host=host)
 
 
 if __name__ == "__main__":
     main()
-
-
