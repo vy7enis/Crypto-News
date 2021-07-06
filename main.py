@@ -40,8 +40,7 @@ class Article(Document):
 
 
 def create_article_from_dict(article_dict):
-    i = article_dict
-    # todo rename key id to article id
+    i = article_dict    
     i["article_id"] = i.pop("id")
     try:
         del i["downvotes"]
