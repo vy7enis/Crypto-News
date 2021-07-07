@@ -1,9 +1,7 @@
-from datetime import datetime
-import requests
-import time
-import config
 import logging
+from datetime import datetime
 
+import requests
 from mongoengine import (
     connect,
     Document,
@@ -14,8 +12,9 @@ from mongoengine import (
     ListField,
     DateTimeField,
 )
-from mongoengine.errors import BulkWriteError, FieldDoesNotExist, NotUniqueError
+from mongoengine.errors import FieldDoesNotExist, NotUniqueError
 
+import config
 
 CRYPTOCOMPARE_URL = (
     "https://min-api.cryptocompare.com/data/v2/news/?lang=EN&api_key=key"
